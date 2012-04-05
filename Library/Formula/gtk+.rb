@@ -19,27 +19,14 @@ class Gtkx < Formula
     build 2326
     cause "Undefined symbols when linking"
   end
-  
-  def options
-    [
-      ['--enable-cups', 'Enable CUPS support']
-    ]
-  end
-  
 
   def install
-    args = [ "--disable-debug",
-             "--disable-dependency-tracking",
-             "--prefix=#{prefix}",
-             "--disable-glibtest",
-             "--disable-introspection",
-             "--disable-visibility"
-           ]
-
-    # Optionally enable CUPS support which is broken on newer releases of Mac OS X
-    args << '--disable-cups' unless ARGV.include? '--enable-cups'
-
-    system "./configure", *args
+    system "./configure", "--disable-debug",
+                          "--disable-dependency-tracking",
+                          "--prefix=#{prefix}",
+                          "--disable-glibtest",
+                          "--disable-introspection",
+                          "--disable-visibility"
     system "make install"
   end
 
