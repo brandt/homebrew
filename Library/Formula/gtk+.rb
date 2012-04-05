@@ -19,18 +19,37 @@ class Gtkx < Formula
     build 2326
     cause "Undefined symbols when linking"
   end
-
-  def install
-    system "./configure", "--disable-debug",
-                          "--disable-dependency-tracking",
-                          "--prefix=#{prefix}",
-                          "--disable-glibtest",
-                          "--disable-introspection",
-                          "--disable-visibility"
-    system "make install"
+  
+  def options
+    [['--enable-cups', 'Enable CUPS support']]
   end
 
+  def install
+    args = [ "--disable-debug",
+             "--disable-dependency-tracking",
+             "--prefix=#{prefix}",
+             "--disable-glibtest",
+             "--disable-introspection",
+             "--disable-visibility"]
+
+    # 2012-04-05: Optionally enable CUPS support which is broken in Mac OS X 10.8
+    args << '--disable-cups' unless ARGV.include? '--enable-cups'
+
+    system "./configure", *args
+    system "make install"
+  end
+  
   def test
     system "#{bin}/gtk-demo"
+  end
+  
+  def caveats
+    return <<-EOS.undent
+    By default, this package is installed without CUPS support because it is broken
+    in recent versions of Mac OS X.  
+    
+    For CUPS support, reinstall with:
+     brew install --with-cups gtk+
+    EOS
   end
 end
