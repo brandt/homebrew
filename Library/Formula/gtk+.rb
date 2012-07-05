@@ -48,7 +48,7 @@ class Gtkx < Formula
       # Patches out docs due to the gtk-doc dependency. Gtk-doc requires the Python
       # libxml2 lib, which is an optional install and thus can't be depended upon.
       p[:p0] = %W[
-          https://gist.github.com/gists/3051415/download
+          https://raw.github.com/gist/3051415/gtk+-2.24.10_nodocs.patch
         ] unless ARGV.include? '--with-docs'
     return p
   end
