@@ -47,7 +47,9 @@ class Gtkx < Formula
       ]}
       # Patches out docs due to the gtk-doc dependency. Gtk-doc requires the Python
       # libxml2 lib, which is an optional install and thus can't be depended upon.
-      p[:p0] << "https://gist.github.com/gists/3051415/download" unless ARGV.include? '--with-docs'
+      p[:p0] = %W[
+          https://gist.github.com/gists/3051415/download
+        ] unless ARGV.include? '--with-docs'
     return p
   end
 
@@ -65,7 +67,7 @@ class Gtkx < Formula
       --disable-visibility
       --disable-maintainer-mode
     ]
-    
+
     system "./configure", *args
     system "make install"
   end
