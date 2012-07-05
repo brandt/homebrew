@@ -29,9 +29,6 @@ class Gtkx < Formula
   end
 
   def patches
-    # Patch out the fragile gtk-doc build unless user explicitly wants docs:
-    DATA
-    
     # Patches used in the official GTK+ OSX installer project:
     # http://git.gnome.org/browse/gtk-osx/tree/modulesets-stable/gtk-osx.modules
     p = { :p1 => %W[
@@ -49,6 +46,7 @@ class Gtkx < Formula
       http://git.gnome.org/browse/gtk-osx/plain/patches/0008-Bug-670373-gtk2-modules-printing-cups-gtkprintbackendcups.patch
       http://git.gnome.org/browse/gtk-osx/plain/patches/0009-Bug-670373-gtk2-modules-printing-cups-gtkprintbackendcups.patch
       ]}
+      # Patch out the fragile gtk-doc build unless user explicitly wants docs:
       p[:p0] = [ DATA ] unless ARGV.include? '--with-docs'
     return p
   end
