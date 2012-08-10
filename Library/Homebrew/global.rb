@@ -6,7 +6,7 @@ require 'exceptions'
 
 ARGV.extend(HomebrewArgvExtension)
 
-HOMEBREW_VERSION = '0.9.1'
+HOMEBREW_VERSION = '0.9.2'
 HOMEBREW_WWW = 'http://mxcl.github.com/homebrew/'
 
 def cache
@@ -16,7 +16,7 @@ def cache
     # we do this for historic reasons, however the cache *should* be the same
     # directory whichever user is used and whatever instance of brew is executed
     home_cache = Pathname.new("~/Library/Caches/Homebrew").expand_path
-    if home_cache.directory? and home_cache.writable?
+    if home_cache.directory? and home_cache.writable_real?
       home_cache
     else
       root_cache = Pathname.new("/Library/Caches/Homebrew")
