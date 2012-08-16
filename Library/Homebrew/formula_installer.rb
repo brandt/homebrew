@@ -1,7 +1,6 @@
 require 'exceptions'
 require 'formula'
 require 'keg'
-require 'set'
 require 'tab'
 require 'bottles'
 
@@ -67,27 +66,21 @@ class FormulaInstaller
       EOS
     end
 
-    # Build up a list of unsatisifed fatal requirements
-    first_message = true
-    unsatisfied_fatals = []
-    f.requirements.each do |req|
-      unless req.satisfied?
-        # Newline between multiple messages
-        puts unless first_message
-        puts req.message
-        first_message = false
-        if req.fatal? and not ignore_deps
-          unsatisfied_fatals << req
-        end
-      end
-    end
-
-    unless unsatisfied_fatals.empty?
-      raise UnsatisfiedRequirements.new(f, unsatisfied_fatals)
-    end
-
     unless ignore_deps
-      needed_deps = f.recursive_deps.reject{ |d| d.installed? }
+      needed_deps = []
+      needed_reqs = []
+
+      ARGV.filter_for_dependencies do
+        needed_deps = f.recursive_deps.reject{ |d| d.installed? }
+        needed_reqs = f.recursive_requirements.reject { |r| r.satisfied? }
+      end
+
+      unless needed_reqs.empty?
+        puts needed_reqs.map { |r| r.message } * "\n"
+        fatals = needed_reqs.select { |r| r.fatal? }
+        raise UnsatisfiedRequirements.new(f, fatals) unless fatals.empty?
+      end
+
       unless needed_deps.empty?
         needed_deps.each do |dep|
           if dep.explicitly_requested?
@@ -120,7 +113,7 @@ class FormulaInstaller
       clean
     end
 
-    raise "Nothing was installed to #{f.prefix}" unless f.installed?
+    opoo "Nothing was installed to #{f.prefix}" unless f.installed?
   end
 
   def install_dependency dep
@@ -241,10 +234,23 @@ class FormulaInstaller
       data = read.read
       raise Marshal.load(data) unless data.nil? or data.empty?
       raise "Suspicious installation failure" unless $?.success?
-
-      # Write an installation receipt (a Tab) to the prefix
-      Tab.for_install(f, args).write if f.installed?
     end
+
+    # This is the installation receipt. The reason this comment is necessary
+    # is because some numpty decided to call the class Tab rather than
+    # the far more appropriate InstallationReceipt :P
+    Tab.for_install(f, args).write
+
+  rescue Exception => e
+    ignore_interrupts do
+      # any exceptions must leave us with nothing installed
+      if f.prefix.directory?
+        puts "One sec, just cleaning up..." if e.kind_of? Interrupt
+        f.prefix.rmtree
+      end
+      f.rack.rmdir_if_possible
+    end
+    raise
   end
 
   def link
@@ -426,7 +432,7 @@ end
 class Formula
   def keg_only_text
     # Add indent into reason so undent won't truncate the beginnings of lines
-    reason = self.keg_only?.to_s.gsub(/[\n]/, "\n    ")
+    reason = self.keg_only_reason.to_s.gsub(/[\n]/, "\n    ")
     return <<-EOS.undent
     This formula is keg-only, so it was not symlinked into #{HOMEBREW_PREFIX}.
 
