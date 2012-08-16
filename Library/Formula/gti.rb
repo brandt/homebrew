@@ -1,12 +1,10 @@
 require 'formula'
 
-# Documentation: https://github.com/mxcl/homebrew/wiki/Formula-Cookbook
-# PLEASE REMOVE ALL GENERATED COMMENTS BEFORE SUBMITTING YOUR PULL REQUEST!
-
 class Gti < Formula
   homepage 'https://github.com/rwos/gti'
   version '0.1'
-  url 'git://github.com/rwos/gti.git'
+  url 'https://github.com/rwos/gti/zipball/ef5c4d822ba4e0227981b274fd65619e5beaa754'
+  sha1 '08dc051f51d674c950ff1db38227b2c531469604'
 
   def install
     system "make"
