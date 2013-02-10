@@ -4,6 +4,7 @@ class John < Formula
   homepage 'http://www.openwall.com/john/'
   url 'http://www.openwall.com/john/g/john-1.7.9.tar.bz2'
   sha1 '8f77bdd42b7cf94ec176f55ea69c4da9b2b8fe3b'
+  head 'https://github.com/magnumripper/JohnTheRipper.git'
 
   option 'jumbo', 'Build with jumbo-7 features'
 
