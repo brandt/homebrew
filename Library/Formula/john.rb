@@ -4,6 +4,7 @@ class John < Formula
   homepage 'http://www.openwall.com/john/'
   url 'http://www.openwall.com/john/g/john-1.7.9.tar.bz2'
   sha1 '8f77bdd42b7cf94ec176f55ea69c4da9b2b8fe3b'
+  head 'https://github.com/magnumripper/JohnTheRipper.git'
 
   option 'jumbo', 'Build with jumbo-7 features'
 
@@ -18,9 +19,9 @@ class John < Formula
   end
 
   fails_with :clang do
-    build 421
+    build 425
     cause "rawSHA1_ng_fmt.c:535:19: error: redefinition of '_mm_testz_si128'"
-  end if build.include? 'jumbo'
+  end if build.include? 'jumbo' or build.head?
 
   def install
     ENV.deparallelize
