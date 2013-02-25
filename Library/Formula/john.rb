@@ -66,5 +66,5 @@ __END__
 -#define JOHN_SYSTEMWIDE_HOME		"/usr/share/john"
 +#define JOHN_SYSTEMWIDE_HOME		"HOMEBREW_PREFIX/share/john"
  #endif
- #define JOHN_PRIVATE_HOME		"~/.john"
+ #define JOHN_PRIVATE_HOME		"~/.local/share/john"
  #endif
