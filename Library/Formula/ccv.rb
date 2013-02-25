@@ -6,7 +6,7 @@ class Ccv < Formula
   version '0.3-rc1'
   sha1 '204ff206cd3adc78c22575a89ce521e7cd868900'
 
-  depends_on 'libjpeg'
+  depends_on 'jpeg'
   depends_on 'libpng'
   depends_on 'liblinear'
   depends_on 'fftw'
@@ -26,7 +26,7 @@ class Ccv < Formula
                  -D HAVE_LIBLINEAR
                  -D HAVE_CBLAS
                ].join(' ')
-            
+
     ENV.append 'LDFLAGS', %W[
                   -lm
                   -lz
@@ -43,7 +43,7 @@ class Ccv < Formula
 #      system 'make', '-e', "CC=#{ENV.cc}", "CFLAGS=#{ENV.cflags}", 'all'
       touch [ '.LN', '.DEF', '.CC' ]
     end
-    
+
     cd 'bin' do
 #      inreplace "makefile" do |s|
 #        s.gsub! /libccv\.a/, '../lib/libccv.a'
@@ -52,8 +52,6 @@ class Ccv < Formula
       ENV.prepend 'LDFLAGS', '-L../lib -lccv'
       system 'make', '-e', "CC=#{ENV.cc}", "CFLAGS=#{ENV.cflags}", "LDFLAGS=#{ENV.ldflags}", 'all'
     end
-
-              
   end
 
   def test
