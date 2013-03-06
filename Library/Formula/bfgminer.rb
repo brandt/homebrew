@@ -2,7 +2,7 @@ require 'formula'
 
 class Bfgminer < Formula
   homepage 'https://github.com/luke-jr/bfgminer'
-  head 'https://github.com/luke-jr/bfgminer.git'
+  head 'https://github.com/luke-jr/bfgminer.git', :branch => 'bfgminer'
 
   depends_on 'autoconf' => :build
   depends_on 'automake' => :build
